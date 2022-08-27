@@ -114,3 +114,15 @@ print(tensor_B)
 print(tensor_B.ndim)
 
 # ---------------Getting informations from tensor---------------
+# Create a rank 4 tensor
+rank_4_tensor = tf.zeros(shape=[2, 3, 4, 5])
+print(rank_4_tensor)
+# Shape: tensor.shape
+print(rank_4_tensor.shape)
+# Rank: tensor.ndim
+print(rank_4_tensor.ndim)
+# Axis (or dimension): tensor[0], tensor[:, 1]...
+print(rank_4_tensor[0])
+# Size: tf.size(tensor)
+print(tf.size(rank_4_tensor).numpy())
+# Get various attributes
