@@ -18,6 +18,8 @@ Sometimes we must have changeable and unchangeable tensors
 tf.constant(): unchangeable tensor
 tf.Variable(): changeable tensor
 """
+import numpy as np
+from random import seed
 import tensorflow as tf
 print(tf.__version__)
 
@@ -66,7 +68,7 @@ print(changeable_tensor, unchangeable_tensor)
 changeable_tensor[0].assign(7)
 print(changeable_tensor)
 
-# ---------------Creating rendom tensors---------------
+# ---------------Creating random tensors---------------
 # Initialize weights for the models
 # Set pseudo random
 random_1 = tf.random.Generator.from_seed(7)
@@ -75,3 +77,40 @@ print(random_1)
 random_2 = tf.random.Generator.from_seed(42)
 random_2 = random_2.normal(shape=(3, 2))
 print(random_2)
+
+
+# ---------------Shuffle the order of elements in a tensor---------------
+# Does not bias the learning of the model using ordered data
+# Global seed
+tf.random.set_seed(42)
+not_shuffled = tf.constant([[10, 7],
+                            [3, 4],
+                            [2, 5]])
+# Local seed
+shuffle_tensor = tf.random.shuffle(not_shuffled, seed=42)
+print(not_shuffled)
+print(shuffle_tensor)
+
+# ---------------Other ways to create tensors---------------
+# Create a tensor of all ones
+one_tensor = tf.ones([10, 7])
+print(one_tensor)
+# Create a tensor of all zeros
+zero_tensor = tf.zeros([10, 7])
+print(zero_tensor)
+
+# ---------------Turn numpy arrays into tensors---------------
+# The main difference between np arrays and tf tensors is that tensors can be run on a GPU much faster
+# Create a numoy array between 1 and 25
+numpy_A = np.arange(1, 25, dtype=np.int32)
+print(numpy_A)
+# Turn into a tensor
+tensor_A = tf.constant(numpy_A)
+print(tensor_A)
+# Changing the shape
+# The shape multiplication must be equal to the original shape
+tensor_B = tf.constant(numpy_A, shape=(2, 3, 4))
+print(tensor_B)
+print(tensor_B.ndim)
+
+# ---------------Getting informations from tensor---------------
