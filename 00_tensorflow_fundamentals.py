@@ -146,4 +146,17 @@ print(rank_3_tensor)
 rank_3_tensor_expand = tf.expand_dims(rank_2_tensor, axis=-1)
 print(rank_3_tensor_expand)
 
-# ---------------Manipulating tensors (tensors operations)---------------
+# ---------------Manipulating tensors (basic tensors operations)---------------
+# Adding values from the tensors (+)
+tensor = tf.constant([[10, 7], [3, 4]])
+print(tensor + 10)
+print(tf.add(tensor, 10))
+# Multiplicating values from the tensors (*)
+print(tensor * 2)
+print(tf.multiply(tensor, 2))
+# Substracting values from the tensors (-)
+print(tensor - 6)
+print(tf.subtract(tensor, 6))
+# Dividing values from the tensors (/)
+print(tensor/2)
+print(tf.divide(tensor, 2))
