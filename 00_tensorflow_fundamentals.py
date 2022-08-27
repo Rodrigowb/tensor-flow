@@ -125,4 +125,25 @@ print(rank_4_tensor.ndim)
 print(rank_4_tensor[0])
 # Size: tf.size(tensor)
 print(tf.size(rank_4_tensor).numpy())
-# Get various attributes
+
+# ---------------Indexing tensors---------------
+# Tensors can be indexed just like Python lists
+# Getting the first two elements
+print(rank_4_tensor[:2, :2, :2, :2])
+#  Getting the first element from each dimension from each index index excepto from the final one
+print(rank_4_tensor[:1, :1, :1, :])
+
+# ---------------Changing tensor dimension---------------
+rank_2_tensor = tf.zeros(shape=(2, 3))
+print(rank_2_tensor)
+# Getting the last item of each row
+print(rank_2_tensor[:, -1])
+# Adding extra dimensios (rank 2 --> rank 3)
+rank_3_tensor = rank_2_tensor[..., tf.newaxis]
+print(rank_2_tensor)
+print(rank_3_tensor)
+# Alternative to tf.newaxis (-1 means extend the final axis)
+rank_3_tensor_expand = tf.expand_dims(rank_2_tensor, axis=-1)
+print(rank_3_tensor_expand)
+
+# ---------------Manipulating tensors (tensors operations)---------------
