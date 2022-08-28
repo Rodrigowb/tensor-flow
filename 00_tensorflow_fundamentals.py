@@ -162,15 +162,27 @@ print(tf.subtract(tensor, 6))
 print(tensor/2)
 print(tf.divide(tensor, 2))
 
-# ---------------Matrix multiplication---------------
+# ---------------Matrix multiplication P1---------------
 # Dot product: matrixmultiplication.xyz
 # Most of the common tensor operations in ML
-# Rules for matrix multiplication
-# 1- The inner dimension must match
-# 2- The resulting matrix has the shape of the inner dimensions
 # TF way
 multiplied_tensor = tf.matmul(tensor, tensor)
 print(multiplied_tensor)
 # Python way
 multiplied_tensor_pway = tensor @ tensor
 print(multiplied_tensor_pway)
+
+# ---------------Matrix multiplication P2---------------
+# Rules for matrix multiplication (transpose or reshape to match)
+# 1- The inner dimension must match
+# 2- The resulting matrix has the shape of the outer dimensions
+X = tf.constant([[1, 2], [1, 2]])
+Y = tf.constant([[1, 2], [1, 2], [1, 2]])
+# This will not work, because the inner dimensions are not equal
+# X_mult_Y = tf.matmul(X, Y)
+# Reshape the matrix
+Y_reshaped = tf.reshape(Y, shape=(2, 3))
+print(Y_reshaped)
+X_mult_Y = tf.matmul(X, Y_reshaped)
+# Worked because now the inner dimensions are equal (2x2 and 2x3)
+print(X_mult_Y)
