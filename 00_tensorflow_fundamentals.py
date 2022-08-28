@@ -186,3 +186,17 @@ print(Y_reshaped)
 X_mult_Y = tf.matmul(X, Y_reshaped)
 # Worked because now the inner dimensions are equal (2x2 and 2x3)
 print(X_mult_Y)
+
+# ---------------Matrix multiplication P3---------------
+# We can miltiplicate matrix using:
+# 1- tf.matmul()
+# 2- tf.tensordot() (specifies the indexes)
+# Using matmul
+Y_transposed = tf.transpose(Y)
+X_mult_Y_transposed = tf.matmul(X, Y_transposed)
+print(X_mult_Y_transposed)
+#  Using ternsordot
+mult_dot = tf.tensordot(X, Y_transposed, 1)
+print(mult_dot)
+
+# ---------------Changing the datatype of a tensor---------------
