@@ -18,6 +18,7 @@ Sometimes we must have changeable and unchangeable tensors
 tf.constant(): unchangeable tensor
 tf.Variable(): changeable tensor
 """
+from statistics import multimode
 import numpy as np
 from random import seed
 import tensorflow as tf
@@ -160,3 +161,16 @@ print(tf.subtract(tensor, 6))
 # Dividing values from the tensors (/)
 print(tensor/2)
 print(tf.divide(tensor, 2))
+
+# ---------------Matrix multiplication---------------
+# Dot product: matrixmultiplication.xyz
+# Most of the common tensor operations in ML
+# Rules for matrix multiplication
+# 1- The inner dimension must match
+# 2- The resulting matrix has the shape of the inner dimensions
+# TF way
+multiplied_tensor = tf.matmul(tensor, tensor)
+print(multiplied_tensor)
+# Python way
+multiplied_tensor_pway = tensor @ tensor
+print(multiplied_tensor_pway)
