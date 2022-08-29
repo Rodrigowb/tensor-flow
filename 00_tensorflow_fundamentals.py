@@ -238,3 +238,28 @@ F_std = tf.math.reduce_std(tf.cast(E, dtype=tf.float32))
 print(F_std)
 
 # ---------------Finding the positional maximun and minimun---------------
+# Create a tensor with the same number using the global seed
+tf.random.set_seed(42)
+G = tf.random.uniform(shape=[50])
+print(G)
+# Find the positional maximum
+G_argmax = tf.argmax(G)
+# OR
+G_argmax_2 = tf.reduce_max(G)
+print(G_argmax)
+# Index in the tensor
+print(G[G_argmax])
+print(G_argmax_2)
+# Equals?
+print(G[G_argmax] == G_argmax_2)
+
+# Find the positional minimum
+G_argmin = tf.argmin(G)
+# OR
+G_argmin_2 = tf.reduce_min(G)
+print(G_argmin)
+# Index the tensor
+print(G[G_argmin])
+print(G_argmin_2)
+# Equals?
+print(G[G_argmin] == G_argmin_2)
