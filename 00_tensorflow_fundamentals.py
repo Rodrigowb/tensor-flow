@@ -18,6 +18,7 @@ Sometimes we must have changeable and unchangeable tensors
 tf.constant(): unchangeable tensor
 tf.Variable(): changeable tensor
 """
+import tensorflow_probability as tfp
 from statistics import multimode
 import numpy as np
 from random import seed
@@ -208,3 +209,32 @@ print(C.dtype)
 # Change from float32 to float16 (reduce precision)
 D = tf.cast(B, dtype=tf.float16)
 print(D.dtype)
+
+# ---------------Aggregating tensors---------------
+# Condensing tensors from multiple values down to a smaller amount of values
+# Get the absolute values (transform all values to positive)
+E = tf.constant([[-10, -7], [5, 7], [9, 7], [50, 30]])
+print(tf.abs(E))
+# Forms of aggregation
+F = tf.constant(np.random.randint(0, 500, size=50))
+print(F)
+# 1- Minimum
+F_min = tf.reduce_min(F)
+print(F_min)
+# 2- Maximum
+F_max = tf.reduce_max(F)
+print(F_max)
+# 3- Mean
+F_mean = tf.reduce_mean(F)
+print(F_mean)
+# 4- Sum
+F_sum = tf.reduce_sum(F)
+print(F_sum)
+# 5- Variance
+F_variance = tfp.stats.variance(F)
+print(F_variance)
+# 6- Std
+F_std = tf.math.reduce_std(tf.cast(E, dtype=tf.float32))
+print(F_std)
+
+# ---------------Finding the positional maximun and minimun---------------
