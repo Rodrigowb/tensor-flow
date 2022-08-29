@@ -272,3 +272,9 @@ print(H.shape)
 # Squeeze the tensor
 H_squeezed = tf.squeeze(H)
 print(H_squeezed.shape)
+
+# ---------------One hot encoding (form of numerical encoding)---------------
+some_list = [0, 1, 2, 3]
+some_list_encoded = tf.one_hot(some_list, 3)
+print(some_list)
+print(some_list_encoded)
