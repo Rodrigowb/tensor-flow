@@ -263,3 +263,12 @@ print(G[G_argmin])
 print(G_argmin_2)
 # Equals?
 print(G[G_argmin] == G_argmin_2)
+
+# ---------------Squeezing a tensor (removing all single dimensions)---------------
+# Create a tensor with the same numbers using the global seed
+tf.random.set_seed(42)
+H = tf.constant(tf.random.uniform(shape=[50]), shape=(1, 1, 1, 1, 50))
+print(H.shape)
+# Squeeze the tensor
+H_squeezed = tf.squeeze(H)
+print(H_squeezed.shape)
