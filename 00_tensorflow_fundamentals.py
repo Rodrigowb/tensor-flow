@@ -200,3 +200,11 @@ mult_dot = tf.tensordot(X, Y_transposed, 1)
 print(mult_dot)
 
 # ---------------Changing the datatype of a tensor---------------
+# Most datatype will be int32
+B = tf.constant([[1.7, 7.4]])
+print(B.dtype)
+C = tf.constant([[7, 4]])
+print(C.dtype)
+# Change from float32 to float16 (reduce precision)
+D = tf.cast(B, dtype=tf.float16)
+print(D.dtype)
