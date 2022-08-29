@@ -278,3 +278,16 @@ some_list = [0, 1, 2, 3]
 some_list_encoded = tf.one_hot(some_list, 3)
 print(some_list)
 print(some_list_encoded)
+
+# ---------------Some more math operations---------------
+I = tf.range(1, 10)
+print(I)
+# 1- Squaring
+I_sqr = tf.square(I)
+print(I_sqr)
+# 2- Square Root (requires non-int type)
+I_sqrt = tf.sqrt(tf.cast(I, dtype=tf.float32))
+print(I_sqrt)
+# 3- Log
+I_log = tf.math.log(tf.cast(I, dtype=tf.float32))
+print(I_log)
