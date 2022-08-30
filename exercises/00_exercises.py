@@ -1,3 +1,4 @@
+from lib2to3.refactor import MultiprocessRefactoringTool
 from statistics import multimode
 import tensorflow as tf
 import numpy as np
@@ -42,3 +43,9 @@ max_value = tf.reduce_max(tensor_3, axis=1)
 print(max_value)
 min_value = tf.reduce_min(tensor_3, axis=1)
 print(min_value)
+
+# Creating a tensor with random values of shape [1, 224, 224, 3] and squeeze it to the shape [224, 224, 3]
+tensor_4 = tf.random.uniform(shape=[1, 224, 224, 3], minval=0, maxval=100)
+print(tensor_4.shape)
+tensor_4_squeezed = tf.squeeze(tensor_4)
+print(tensor_4_squeezed.shape)
