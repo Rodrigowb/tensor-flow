@@ -1,3 +1,4 @@
+from statistics import multimode
 import tensorflow as tf
 import numpy as np
 
@@ -21,3 +22,13 @@ print(tensor_1.shape)
 tensor_2 = tf.random.uniform(shape=[5, 300], minval=0, maxval=1)
 print(tensor_2)
 print(tensor_2.shape)
+
+# Multiplication using matrix multiplication
+# Must transpose one tensor to make the inner dimensions match
+tensor_2_transposed = tf.transpose(tensor_2)
+tensor_matmul = tf.matmul(tensor_1, tensor_2_transposed)
+print(tensor_matmul)
+
+# Multiplication using dotproduct
+tensor_dot = tf.tensordot(tensor_1, tensor_2_transposed, 1)
+print(tensor_dot)
