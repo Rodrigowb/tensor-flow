@@ -302,3 +302,7 @@ J_array = np.array(J)
 # or
 print(J.numpy())
 print(J_array)
+
+# ---------------Finding access to GPUs---------------
+devices = tf.config.list_physical_devices()
+print(devices)
