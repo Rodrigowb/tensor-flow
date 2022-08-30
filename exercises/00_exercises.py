@@ -49,3 +49,11 @@ tensor_4 = tf.random.uniform(shape=[1, 224, 224, 3], minval=0, maxval=100)
 print(tensor_4.shape)
 tensor_4_squeezed = tf.squeeze(tensor_4)
 print(tensor_4_squeezed.shape)
+
+# Creating a tensor with shape [10] and find the index where has the max value
+tensor_5 = tf.constant([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+print(tensor_5.shape)
+tensor_5_argmin = tf.argmax(tensor_5)
+print(tensor_5_argmin)
+tensor_5_one_hot = tf.one_hot(tensor_5, 10)
+print(tensor_5_one_hot)
