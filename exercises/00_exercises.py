@@ -32,3 +32,13 @@ print(tensor_matmul)
 # Multiplication using dotproduct
 tensor_dot = tf.tensordot(tensor_1, tensor_2_transposed, 1)
 print(tensor_dot)
+
+# Create tensor with random valus betwen 0 and 1 with the shape [224, 224, 3]
+tensor_3 = tf.random.uniform(shape=[224, 224, 3], minval=0, maxval=1)
+print(tensor_3.shape)
+
+# Finding the max and min values in the 1rst axis
+max_value = tf.reduce_max(tensor_3, axis=1)
+print(max_value)
+min_value = tf.reduce_min(tensor_3, axis=1)
+print(min_value)
