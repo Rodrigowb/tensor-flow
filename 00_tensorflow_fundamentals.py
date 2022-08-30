@@ -291,3 +291,14 @@ print(I_sqrt)
 # 3- Log
 I_log = tf.math.log(tf.cast(I, dtype=tf.float32))
 print(I_log)
+
+# ---------------TF and numpy compatibility---------------
+# TF interacts very well with NP arrays
+# Create a tensor directly with NP array
+J = tf.constant(np.array([7., 3., 4.]))
+print(J)
+# Convert the tensor back to NP array
+J_array = np.array(J)
+# or
+print(J.numpy())
+print(J_array)
