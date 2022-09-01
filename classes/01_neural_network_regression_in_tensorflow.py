@@ -30,13 +30,30 @@ x = np.array([-7.0, -4.0, -1.0, 2.0, 5.0, 8.0, 11.0, 14.0])
 y = np.array([3.0, 6.0, 9.0, 12.0, 15.0, 18.0, 21.0, 24.0])
 # Visualize it
 # plt.scatter(x, y)
-
-# ---------------Input and output shapes---------------
-# Create a demo tensor for the housing price prediction problem
-house_info = tf.constant(["bedroom", "bathroom", "garage"])
-print(house_info.shape)
-house_price = tf.constant([939700])
-print(house_price.shape)
-print(x.ndim)
+# plt.show()
+# Transform the arrays into tensors
+X = tf.constant(x)
+Y = tf.constant(y)
+print(X.shape)
+print(Y.shape)
 
 # ---------------Steps in modeling with TF---------------
+# Set random seed
+tf.random.set_seed(42)
+
+# 1. Create a model using the Sequential API
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(1)
+])
+
+# 2. Compile the error (error between labels and predictions)
+model.compile(loss=tf.keras.losses.mae,
+              optimizer=tf.keras.optimizers.SGD(),
+              metrics=["mae"])
+
+# 3. Fit the model (after it, you have a trained model)
+model.fit(tf.expand_dims(X, axis=-1), Y, epochs=1000)
+
+# 4. Try and make a prediction using the model
+prediction = model.predict([17.0])
+print(prediction)
