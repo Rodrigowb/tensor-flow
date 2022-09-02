@@ -52,25 +52,59 @@ print(X.shape)
 print(Y.shape)
 
 # ---------------Steps in modeling with TF---------------
-# Set random seed
-tf.random.set_seed(42)
-
-# 1. Create a model using the Sequential API
-model = tf.keras.Sequential([
-    tf.keras.layers.Dense(1)
-])
-
-# 2. Compile the error (error between labels and predictions)
-model.compile(loss=tf.keras.losses.mae,
-              optimizer=tf.keras.optimizers.SGD(),
-              metrics=["mae"])
-
-# 3. Fit the model (after it, you have a trained model)
-model.fit(tf.expand_dims(X, axis=-1), Y, epochs=1000)
-
-# 4. Try and make a prediction using the model
-prediction = model.predict([17.0])
-print(prediction)
 
 
-# ---------------Improving our model---------------
+def FirstModel():
+    # Set random seed
+    tf.random.set_seed(42)
+
+    # 1. Create a model using the Sequential API
+    model = tf.keras.Sequential([
+        tf.keras.layers.Dense(1)
+    ])
+
+    # 2. Compile the error (error between labels and predictions)
+    model.compile(loss=tf.keras.losses.mae,
+                  optimizer=tf.keras.optimizers.SGD(),
+                  metrics=["mae"])
+
+    # 3. Fit the model (after it, you have a trained model)
+    model.fit(tf.expand_dims(X, axis=-1), Y, epochs=10)
+
+    # 4. Try and make a prediction using the model
+    prediction = model.predict([17.0])
+    print(prediction)
+
+# ---------------Improving our model (rebuilding the model)---------------
+
+
+def SecondModel():
+    """
+    Improving the FirstModel()
+    1- Improve epochs
+    2- Adding hidden layers
+    3- Changing the optimizers for adam
+    """
+    # 1- Create the model
+    model = tf.keras.Sequential([
+        tf.keras.layers.Dense(100, activation="relu"),
+        tf.keras.layers.Dense(100, activation="relu"),
+        tf.keras.layers.Dense(100, activation="relu"),
+        tf.keras.layers.Dense(1)
+
+    ])
+
+    # 2- Compiling the model
+    model.compile(loss=tf.keras.losses.mae,
+                  optimizer=tf.keras.optimizers.Adam(lr=0.0001),
+                  metrics=["mae"])
+
+    # 3- Fit the model
+    model.fit(tf.expand_dims(X, axis=-1), Y, epochs=100)
+
+    # 4- Try to predict using the builded model
+    prediction = model.predict([17.0])
+    print(prediction)
+
+
+SecondModel()
