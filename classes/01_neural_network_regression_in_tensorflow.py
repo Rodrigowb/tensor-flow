@@ -17,6 +17,20 @@ Predicting a numerical variable based o some other combinations of variables (Pr
 2- Compiling a model: define the loss function (tells how wrong the model is) and the optimizer 
 how to improve the patterns) and evaluating metrics (what we can use to interpret the performance of our model).
 3- Fitting a model: letting the model try to find patterns between x and y (features and labels).
+
+-----Steps to improve our model-----
+Altering the steps to create a model
+1- Creating a model: 
+a) Add more layers
+b) Increase numbers of hidden layers (neurons)
+c) Change activation function for each layer
+
+2- Compiling the model:
+a) Change the optimization function and learning rate of the optimization function
+
+3- Fitting the model:
+a) Set more epochs to the fitting (leave it training longer)
+b) Get more data to the model train 
 """
 
 import tensorflow as tf
@@ -57,3 +71,6 @@ model.fit(tf.expand_dims(X, axis=-1), Y, epochs=1000)
 # 4. Try and make a prediction using the model
 prediction = model.predict([17.0])
 print(prediction)
+
+
+# ---------------Improving our model---------------
