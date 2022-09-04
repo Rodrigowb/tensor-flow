@@ -43,6 +43,11 @@ Fit and evaluate on different datasets. Enable the model to generalize: perfor w
 1- Training set: the model learns: 70-80% (Eg: couse material)
 2- Validation set: the model gets tuned: 10-15% (Eg: practice exam)
 3- Test set: the model gets evaluated to test what is has learned: 10-15% (Eg: final exam)
+
+-----Parameters-----
+1- Total params: total number of parameters in the model
+2- Trainable parameters: parameters the model can update as it trains
+3- Non-trainable params: aren't updated during training: typical when you bring in already learn patterns or parameters from other models during transfer learning
 """
 
 import tensorflow as tf
@@ -173,7 +178,25 @@ def ThirdModel():
     # Show a legend
     plt.legend()
     # Plot the graph
-    plt.show()
+    # plt.show()
+
+    # 5- Build a neural network for our data
+    # 5.1- Create a model
+    # The input shape sometimes will be defined automatically (in this case, we are using one value to predict one value, that's why, 1)
+    model = tf.keras.Sequential([
+        tf.keras.layers.Dense(1, input_shape=[1])
+    ])
+
+    # 5.2- Compile the model
+    model.compile(loss=tf.keras.losses.mae,
+                  optimizer=tf.keras.optimizers.SGD(),
+                  metrics=["mae"])
+
+    # Visualize the model
+    model.summary()
+
+    # 5.3- Fit the model
+    model.fit(tf.expand_dims(X_train, axis=-1), Y_train, epochs=100)
 
 
 ThirdModel()
