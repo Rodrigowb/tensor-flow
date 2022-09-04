@@ -200,7 +200,8 @@ def ThirdModel():
                   metrics=["mae"])
 
     # 5.3- Fit the model
-    model.fit(tf.expand_dims(X_train, axis=-1), Y_train, epochs=100, verbose=0)
+    model.fit(tf.expand_dims(X_train, axis=-1),
+              Y_train, epochs=1000, verbose=0)
 
     # Visualize the model
     model.summary()
