@@ -39,10 +39,10 @@ b) Get more data to the model train
 4- The predictions
 
 -----The three sets-----
-Fit and evaluate on different datasets
-1- Training set: the model learns: 70-80% 
-2- Validation set: the model gets tuned: 10-15%
-3- Test set: the model gets evaluated to test what is has learned: 10-15%
+Fit and evaluate on different datasets. Enable the model to generalize: perfor well on data that the model hasn't seen before
+1- Training set: the model learns: 70-80% (Eg: couse material)
+2- Validation set: the model gets tuned: 10-15% (Eg: practice exam)
+3- Test set: the model gets evaluated to test what is has learned: 10-15% (Eg: final exam)
 """
 
 import tensorflow as tf
@@ -154,6 +154,26 @@ def ThirdModel():
     # 1- Visualize the data
     plt.plot(X, Y)
     # plt.show()
+
+    # 2- Check the length of how many samples we have
+    print(len(X))
+
+    # 3- Split the data into train and test
+    X_train = X[:40]
+    Y_train = Y[:40]
+    X_test = X[40:]
+    Y_test = Y[40:]
+
+    # 4- Viasualize the splitted data
+    plt.figure(figsize=(10, 7))
+    # Plot training data in blue
+    plt.scatter(X_train, Y_train, c="b", label="Training data")
+    # Plot testing data in green
+    plt.scatter(X_test, Y_test, c="g", label="Testing data")
+    # Show a legend
+    plt.legend()
+    # Plot the graph
+    plt.show()
 
 
 ThirdModel()
