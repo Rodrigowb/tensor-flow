@@ -31,6 +31,18 @@ a) Change the optimization function and learning rate of the optimization functi
 3- Fitting the model:
 a) Set more epochs to the fitting (leave it training longer)
 b) Get more data to the model train
+
+-----Visualization for improving the model-----
+1- The data
+2- The model
+3- The training
+4- The predictions
+
+-----The three sets-----
+Fit and evaluate on different datasets
+1- Training set: the model learns: 70-80% 
+2- Validation set: the model gets tuned: 10-15%
+3- Test set: the model gets evaluated to test what is has learned: 10-15%
 """
 
 import tensorflow as tf
@@ -38,23 +50,30 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # ---------------Creating data to view and fit---------------
-# Creating features
-x = np.array([-7.0, -4.0, -1.0, 2.0, 5.0, 8.0, 11.0, 14.0])
-# Creating labels
-y = np.array([3.0, 6.0, 9.0, 12.0, 15.0, 18.0, 21.0, 24.0])
-# Visualize it
-# plt.scatter(x, y)
-# plt.show()
-# Transform the arrays into tensors
-X = tf.constant(x)
-Y = tf.constant(y)
-print(X.shape)
-print(Y.shape)
+# # Creating features
+# x = np.array([-7.0, -4.0, -1.0, 2.0, 5.0, 8.0, 11.0, 14.0])
+# # Creating labels
+# y = np.array([3.0, 6.0, 9.0, 12.0, 15.0, 18.0, 21.0, 24.0])
+# # Visualize it
+# # plt.scatter(x, y)
+# # plt.show()
+# # Transform the arrays into tensors
+# X = tf.constant(x)
+# Y = tf.constant(y)
+# print(X.shape)
+# print(Y.shape)
 
 # ---------------Steps in modeling with TF---------------
 
 
 def FirstModel():
+    # Creating features
+    x = np.array([-7.0, -4.0, -1.0, 2.0, 5.0, 8.0, 11.0, 14.0])
+    # Creating labels
+    y = np.array([3.0, 6.0, 9.0, 12.0, 15.0, 18.0, 21.0, 24.0])
+    X = tf.constant(x)
+    Y = tf.constant(y)
+
     # Set random seed
     tf.random.set_seed(42)
 
@@ -88,6 +107,13 @@ def SecondModel():
     5- Change the optimization function
     6- Change the learning rate
     """
+    # Creating features
+    x = np.array([-7.0, -4.0, -1.0, 2.0, 5.0, 8.0, 11.0, 14.0])
+    # Creating labels
+    y = np.array([3.0, 6.0, 9.0, 12.0, 15.0, 18.0, 21.0, 24.0])
+    X = tf.constant(x)
+    Y = tf.constant(y)
+
     # 1- Create the model
     model = tf.keras.Sequential([
         tf.keras.layers.Dense(50, activation=None),
@@ -112,5 +138,22 @@ def SecondModel():
     # !!!Producing overfitting: the metrics in the training data is not the key parameters to evaluate a model!!!
 
 
-SecondModel()
+# SecondModel()
 # FirstModel()
+
+# ---------------Evaluating a model---------------
+
+def ThirdModel():
+    # Making a bigger dataset
+    X = tf.range(-100, 100, 4)
+    print(X)
+    # Make labels for the dataset
+    Y = X + 10
+    print(Y)
+
+    # 1- Visualize the data
+    plt.plot(X, Y)
+    # plt.show()
+
+
+ThirdModel()
