@@ -53,20 +53,7 @@ Fit and evaluate on different datasets. Enable the model to generalize: perfor w
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-
-# ---------------Creating data to view and fit---------------
-# # Creating features
-# x = np.array([-7.0, -4.0, -1.0, 2.0, 5.0, 8.0, 11.0, 14.0])
-# # Creating labels
-# y = np.array([3.0, 6.0, 9.0, 12.0, 15.0, 18.0, 21.0, 24.0])
-# # Visualize it
-# # plt.scatter(x, y)
-# # plt.show()
-# # Transform the arrays into tensors
-# X = tf.constant(x)
-# Y = tf.constant(y)
-# print(X.shape)
-# print(Y.shape)
+from tensorflow.keras.utils import plot_model
 
 # ---------------Steps in modeling with TF---------------
 
@@ -184,7 +171,8 @@ def ThirdModel():
     # 5.1- Create a model
     # The input shape sometimes will be defined automatically (in this case, we are using one value to predict one value, that's why, 1)
     model = tf.keras.Sequential([
-        tf.keras.layers.Dense(1, input_shape=[1])
+        tf.keras.layers.Dense(10, input_shape=[1], name="input_layer"),
+        tf.keras.layers.Dense(1, name="output_layer")
     ])
 
     # 5.2- Compile the model
@@ -192,11 +180,13 @@ def ThirdModel():
                   optimizer=tf.keras.optimizers.SGD(),
                   metrics=["mae"])
 
+    # 5.3- Fit the model
+    model.fit(tf.expand_dims(X_train, axis=-1), Y_train, epochs=100, verbose=0)
+
     # Visualize the model
     model.summary()
 
-    # 5.3- Fit the model
-    model.fit(tf.expand_dims(X_train, axis=-1), Y_train, epochs=100)
+    # 6- Visualizing our models prediction
 
 
 ThirdModel()
