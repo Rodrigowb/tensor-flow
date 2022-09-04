@@ -48,6 +48,10 @@ Fit and evaluate on different datasets. Enable the model to generalize: perfor w
 1- Total params: total number of parameters in the model
 2- Trainable parameters: parameters the model can update as it trains
 3- Non-trainable params: aren't updated during training: typical when you bring in already learn patterns or parameters from other models during transfer learning
+
+-----Visualize models prediction-----
+1- Plot the predictions against the ground truth labels
+Often: Y_test vs. Y_pred
 """
 
 import tensorflow as tf
@@ -133,7 +137,21 @@ def SecondModel():
 # SecondModel()
 # FirstModel()
 
+# ---------------Creating a plotting function---------------
+def plot_predictions(train_data,
+                     train_labels,
+                     test_data,
+                     test_labels,
+                     predictions):
+    plt.figure(figsize=(10, 7))
+    plt.scatter(train_data, train_labels, c="b", label="Training data")
+    plt.scatter(test_data, test_labels, c="g", label="Testing data")
+    plt.scatter(test_data, predictions, c="r", label="Predictions")
+    plt.legend()
+    plt.show()
+
 # ---------------Evaluating a model---------------
+
 
 def ThirdModel():
     # Making a bigger dataset
@@ -171,13 +189,14 @@ def ThirdModel():
     # 5.1- Create a model
     # The input shape sometimes will be defined automatically (in this case, we are using one value to predict one value, that's why, 1)
     model = tf.keras.Sequential([
-        tf.keras.layers.Dense(10, input_shape=[1], name="input_layer"),
+        tf.keras.layers.Dense(
+            10, input_shape=[1], name="input_layer", activation="relu"),
         tf.keras.layers.Dense(1, name="output_layer")
     ])
 
     # 5.2- Compile the model
     model.compile(loss=tf.keras.losses.mae,
-                  optimizer=tf.keras.optimizers.SGD(),
+                  optimizer=tf.keras.optimizers.Adam(lr=0.01),
                   metrics=["mae"])
 
     # 5.3- Fit the model
@@ -187,6 +206,16 @@ def ThirdModel():
     model.summary()
 
     # 6- Visualizing our models prediction
+    # Create predictions
+    Y_pred = model.predict(X_test)
+    print(Y_pred)
+    plot_predictions(train_data=X_train,
+                     train_labels=Y_train,
+                     test_data=X_test,
+                     test_labels=Y_test,
+                     predictions=Y_pred)
+
+    # 7- Evaluating our model's predictions with regression evaluation metrics
 
 
 ThirdModel()
