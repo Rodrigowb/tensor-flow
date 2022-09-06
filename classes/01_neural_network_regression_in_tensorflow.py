@@ -5,7 +5,7 @@ Predicting a numerical variable based o some other combinations of variables (Pr
 -----Architecture of a regression model-----
 1- Input layer shape
 2- Hidden layers
-3- Neurons per hidden layers
+3- Neurons per hidden layer
 4- Output layer shape
 5- Hidden activation
 6- Output activation
@@ -52,8 +52,21 @@ Fit and evaluate on different datasets. Enable the model to generalize: perfor w
 -----Visualize models prediction-----
 1- Plot the predictions against the ground truth labels
 Often: Y_test vs. Y_pred
-"""
 
+-----Evaluation metrics for the models performance-----
+Main regressions metrics
+1- MAE: mean absolute error (on average, how wrong is each of my model's predictions)
+2- MSE: mean squared error (use when larger errors are more significant than smaller errors)
+3- HUBER: combination of MSE and MAE (less sensitive to outliers than MSE)
+
+-----Resources to trac our experiments-----
+1- TensorBoard- component of tf library to help us track experiments
+2- Weights and Biases- a tool to track all kinds of ml experiments (plugs streight to tensorboard)
+
+-----Formats to save a model-----
+1- SavedModel format (folder): better for tensorflow environment
+2- HDF5 format (single file): better for universal format
+"""
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
@@ -154,6 +167,8 @@ def plot_predictions(train_data,
 
 
 def ThirdModel():
+    # Set random seed
+    tf.random.set_seed(42)
     # Making a bigger dataset
     X = tf.range(-100, 100, 4)
     print(X)
@@ -210,13 +225,39 @@ def ThirdModel():
     # Create predictions
     Y_pred = model.predict(X_test)
     print(Y_pred)
-    plot_predictions(train_data=X_train,
-                     train_labels=Y_train,
-                     test_data=X_test,
-                     test_labels=Y_test,
-                     predictions=Y_pred)
+    # plot_predictions(train_data=X_train,
+    #                  train_labels=Y_train,
+    #                  test_data=X_test,
+    #                  test_labels=Y_test,
+    #                  predictions=Y_pred)
 
     # 7- Evaluating our model's predictions with regression evaluation metrics
+    # Evaluate the model on the test set
+    model.evaluate(X_test, Y_test)
+    # Calculate the mean absolute error (REMEMBER: make the tensors with the same shape)
+    mae = tf.metrics.mean_absolute_error(Y_test, tf.squeeze(Y_pred))
+    print(mae)
+    # Calculate the mean squared error
+    mse = tf.metrics.mean_squared_error(Y_test, tf.squeeze(Y_pred))
+    print(mse)
+
+    # 8- Saving the model using SavedModel format
+    model.save("first_model_saved.h5")
 
 
 ThirdModel()
+
+# ---------------MAE and MSE functions---------------
+
+
+def mae(Y_test, Y_pred):
+    return tf.metrics.mean_absolute_error(Y_test, Y_pred)
+
+
+def mse(Y_test, Y_pred):
+    return tf.metrics.mean_squared_error(Y_test, Y_pred)
+
+
+# ---------------Saving our models---------------
+# Allows us to use them in a webaplication or in a mobile app
+# Using the SavedModel inside the function THirdModel()
