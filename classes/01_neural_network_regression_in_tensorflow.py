@@ -216,7 +216,7 @@ def ThirdModel():
 
     # 5.3- Fit the model
     model.fit(tf.expand_dims(X_train, axis=-1),
-              Y_train, epochs=1000, verbose=0)
+              Y_train, epochs=1000, verbose=1)
 
     # Visualize the model
     model.summary()
@@ -225,11 +225,11 @@ def ThirdModel():
     # Create predictions
     Y_pred = model.predict(X_test)
     print(Y_pred)
-    # plot_predictions(train_data=X_train,
-    #                  train_labels=Y_train,
-    #                  test_data=X_test,
-    #                  test_labels=Y_test,
-    #                  predictions=Y_pred)
+    plot_predictions(train_data=X_train,
+                     train_labels=Y_train,
+                     test_data=X_test,
+                     test_labels=Y_test,
+                     predictions=Y_pred)
 
     # 7- Evaluating our model's predictions with regression evaluation metrics
     # Evaluate the model on the test set
@@ -244,8 +244,11 @@ def ThirdModel():
     # 8- Saving the model using SavedModel format
     model.save("first_model_saved.h5")
 
+    # 9- Return the predictions
+    return Y_pred, X_test
 
-ThirdModel()
+
+# ThirdModel()
 
 # ---------------MAE and MSE functions---------------
 
@@ -261,3 +264,15 @@ def mse(Y_test, Y_pred):
 # ---------------Saving our models---------------
 # Allows us to use them in a webaplication or in a mobile app
 # Using the SavedModel inside the function THirdModel()
+
+# ---------------Using saved model---------------
+# Load in a SavedModel
+loaded_SavedModel_Format = tf.keras.models.load_model("./first_model_saved")
+loaded_SavedModel_Format.summary()
+# Compare the predictions of the model and the saved mode (check of the saved is the same model as we expected)
+X_test = ThirdModel()[1]
+# Predictions of the model
+Y_pred = ThirdModel()[0]
+# Predictions of the saved model
+Y_pred_saved = loaded_SavedModel_Format.predict(X_test)
+print(Y_pred == Y_pred_saved)
