@@ -42,12 +42,12 @@ def ExerciseOne():
 
     # Compile the model
     model.compile(loss=tf.keras.losses.mae,
-                  optimizer=tf.keras.optimizers.Adam(lr=0.01),
+                  optimizer=tf.keras.optimizers.Adam(lr=0.001, epsilon=0.1),
                   metrics=["mae"])
 
     # Fit the model
     history = model.fit(tf.expand_dims(x_train, axis=-1),
-                        y_train, epochs=100, verbose=1)
+                        y_train, epochs=200, verbose=1)
 
     # Evaluate the model
     model.evaluate(x_test, y_test)
