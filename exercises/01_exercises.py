@@ -59,4 +59,45 @@ def ExerciseOne():
     plt.show()
 
 
-ExerciseOne()
+def ExerciseTwo():
+    """Import the Boston housing dataset and modeling it with a neural network regression"""
+
+    # Importing the data and splitting it
+    housing_data = tf.keras.datasets.boston_housing.load_data(
+        path="housing-data.csv", test_split=0.2, seed=42)
+
+    x_train = tf.squeeze(housing_data[0][0])
+    y_train = tf.squeeze(housing_data[0][1])
+    x_test = tf.squeeze(housing_data[1][0])
+    y_test = tf.squeeze(housing_data[1][1])
+
+    # Build the model
+    tf.random.set_seed(42)
+    model = tf.keras.Sequential([
+        tf.keras.layers.Dense(10, activation="relu"),
+        # tf.keras.layers.Dense(10, activation="relu"),
+        tf.keras.layers.Dense(1)
+    ])
+
+    # Compile the model
+    model.compile(loss=tf.keras.losses.mae,
+                  optimizer=tf.keras.optimizers.Adam(),
+                  metrics=["mae"])
+
+    # Fit the model
+    history = model.fit(tf.expand_dims(x_train, axis=-1),
+                        y_train, epochs=1, verbose=1)
+
+    # Evaluate the model
+    model.evaluate(x_test, y_test)
+
+    # Plot the history
+    pd.DataFrame(history.history).plot()
+    plt.ylabel("loss")
+    plt.xlabel("epochs")
+    plt.show()
+
+    print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
+
+
+ExerciseTwo()
