@@ -42,7 +42,7 @@ def ExerciseOne():
 
     # Compile the model
     model.compile(loss=tf.keras.losses.mae,
-                  optimizer=tf.keras.optimizers.Adam(),
+                  optimizer=tf.keras.optimizers.Adam(lr=0.01),
                   metrics=["mae"])
 
     # Fit the model
