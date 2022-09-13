@@ -34,9 +34,9 @@ def ExerciseOne():
     # Create the model
     tf.random.set_seed(42)
     model = tf.keras.Sequential([
-        tf.keras.layers.Dense(100, activation="relu"),
-        tf.keras.layers.Dense(100, activation="relu"),
         tf.keras.layers.Dense(10, activation="relu"),
+        # tf.keras.layers.Dense(100, activation="relu"),
+        # tf.keras.layers.Dense(10, activation="relu"),
         tf.keras.layers.Dense(1)
     ])
 
