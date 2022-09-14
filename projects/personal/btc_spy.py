@@ -22,7 +22,9 @@ import math
 # ----------Manipulating the data-----------
 
 # Import the data and get the corret data range
-X_spy = pd.read_csv('SPY.csv', usecols=[0, 4])
+X_spy = pd.read_csv('SPY.csv', usecols=[0, 4], skiprows=[
+                    i for i in range(1, 800)])
+print(X_spy.size)
 date_range = X_spy['Date']
 
 # Select the BTC data according to the data_range
@@ -88,7 +90,7 @@ model = tf.keras.Sequential([
 
 # ----------Compiling the model-----------
 model.compile(loss=tf.keras.losses.mae,
-              optimizer=tf.keras.optimizers.Adam(lr=0.001),
+              optimizer=tf.keras.optimizers.Adam(lr=0.0001),
               metrics=["mae"])
 
 # ----------Fit the model-----------
