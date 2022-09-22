@@ -247,9 +247,6 @@ def ThirdModel():
     # 9- Return the predictions
     return Y_pred, X_test
 
-
-# ThirdModel()
-
 # ---------------MAE and MSE functions---------------
 
 
@@ -266,13 +263,15 @@ def mse(Y_test, Y_pred):
 # Using the SavedModel inside the function THirdModel()
 
 # ---------------Using saved model---------------
-# Load in a SavedModel
-loaded_SavedModel_Format = tf.keras.models.load_model("./first_model_saved")
-loaded_SavedModel_Format.summary()
-# Compare the predictions of the model and the saved mode (check of the saved is the same model as we expected)
-X_test = ThirdModel()[1]
-# Predictions of the model
-Y_pred = ThirdModel()[0]
-# Predictions of the saved model
-Y_pred_saved = loaded_SavedModel_Format.predict(X_test)
-print(Y_pred == Y_pred_saved)
+def CheckModel():
+    # Load in a SavedModel
+    loaded_SavedModel_Format = tf.keras.models.load_model(
+        "./first_model_saved")
+    loaded_SavedModel_Format.summary()
+    # Compare the predictions of the model and the saved mode (check of the saved is the same model as we expected)
+    X_test = ThirdModel()[1]
+    # Predictions of the model
+    Y_pred = ThirdModel()[0]
+    # Predictions of the saved model
+    Y_pred_saved = loaded_SavedModel_Format.predict(X_test)
+    print(Y_pred == Y_pred_saved)
