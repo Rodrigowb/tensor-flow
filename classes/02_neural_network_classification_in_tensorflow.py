@@ -32,6 +32,7 @@
 7- Fitting for longer
 """
 
+from turtle import circle
 from sklearn.datasets import make_circles
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -59,8 +60,8 @@ def plot_decision_boundary(model, X, Y):
 
     # Make predictions
     y_pred = model.predict(x_in)
-    print(len(y_pred[0]))
-    print(y_pred[0])
+    # print(len(y_pred[0]))
+    # print(y_pred[0])
 
     # Check for multiclass
     if len(y_pred[0]) > 1:
@@ -76,6 +77,7 @@ def plot_decision_boundary(model, X, Y):
     plt.scatter(X[:, 0], X[:, 1], c=Y, s=40, cmap=plt.cm.RdYlBu)
     plt.xlim(xx.min(), xx.max())
     plt.ylim(yy.min(), yy.max())
+    plt.show()
 
 
 def Introduction():
@@ -87,26 +89,24 @@ def Introduction():
                         noise=0.03,
                         random_state=42)
 
+    print(X.shape, Y.shape)
+
     # Better visualize the data as a df
     circles = pd.DataFrame({"X0": X[:, 0], "X1": X[:, 1], "label": Y})
-    print(circles)
+    # print(circles)
 
     # Plot a graph to understand
     plt.scatter(X[:, 0], X[:, 1], c=Y)
     # plt.show()
-
-    # Checking the shape
-    print(X.shape, Y.shape)
-    print(len(X), len(Y))
 
     # Set seed
     tf.random.set_seed(42)
 
     # 1- Create the model
     model = tf.keras.Sequential([
-        tf.keras.layers.Dense(100, activation="relu"),
-        tf.keras.layers.Dense(10, activation="relu"),
-        tf.keras.layers.Dense(1)
+        tf.keras.layers.Dense(4, activation="relu"),
+        tf.keras.layers.Dense(4, activation="relu"),
+        tf.keras.layers.Dense(1, activation="sigmoid")
     ])
 
     # 2- Compile the model
@@ -115,8 +115,7 @@ def Introduction():
                   metrics=["accuracy"])
 
     # 3- Fit the model
-    model.fit(tf.expand_dims(X, axis=-1),
-              Y, epochs=2, verbose=1)
+    model.fit(X, Y, epochs=150, verbose=1)
 
     # 4 & 5- Tweak and evaluate the model
     model.evaluate(X, Y)
