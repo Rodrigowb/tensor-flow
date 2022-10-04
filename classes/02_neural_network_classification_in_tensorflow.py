@@ -30,6 +30,14 @@
 5- Change the lr
 6- Fitting on more data
 7- Fitting for longer
+
+-----Non Linear activation functions (deduce paterns in non-linear data)-----
+1- Sigmoid: 1 / 1 + exp(-x)
+2- Relu: max(x, 0)
+
+-----Linear activation functions-----
+1- Linear: does not change the input data
+
 """
 
 from turtle import circle
