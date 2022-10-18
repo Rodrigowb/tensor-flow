@@ -52,6 +52,7 @@ def Prediction():
                             )
 
     # 3- Fit the model
+
     history = insurance_model.fit(tf.expand_dims(x_train, axis=-1),
                                   y_train, epochs=2, verbose=1)
 
