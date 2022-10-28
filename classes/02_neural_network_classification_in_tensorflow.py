@@ -10,16 +10,16 @@
 8- Optimizer: SGD or Adam
 
 -----Types of classification-----
-1- Binary classification
 2- Multiclass classification
 3- Multilabel classification
+1- Binary classification
 
 -----Steps in modeling-----
 1- Create or import the model
 2- Compile the model
 3- Fit the model
 4- Evaluate the model
-5- Tweak 
+5- Tweak
 6- Evaluate...
 
 -----Improving the model-----
@@ -46,9 +46,24 @@ Obs: tradeoff between precision and recall
 4- F1score: combination of precision and recall
 5- Confusion matrix
 
+-----Multiclass classification-----
+1- Input shape = 28 x 28
+2- Output shape = 10 (one per class of clothing)
+3- Loss function = tf.keras.losses.CategoricalCrossentropy() (one hot encoded label)
+or
+tf.keras.losses.SparseCategoricalCrossentropy() (integer labels)
+4- Output layer activation = Softmax (not sigmoid)
+
+----Shape ERRORS-----
+1- Input shape
+2- Output shape
+3- Loss functions
+
 """
 
 from gc import callbacks
+from os import defpath
+from tabnanny import verbose
 from turtle import circle
 from sklearn.datasets import make_circles
 import pandas as pd
@@ -58,14 +73,15 @@ import numpy as np
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 import itertools
-from services import MachineLearningMetrics
+from tensorflow.keras.datasets import fashion_mnist
+import random
 
 # Create a visualization function
 
 
 def plot_decision_boundary(model, X, Y):
     """Take in a trained model, create a mashgrid with the X values,
-    make predictions across the meshgrid and plot the predictions as well 
+    make predictions across the meshgrid and plot the predictions as well
     as a line betwen zones
     """
 
@@ -163,7 +179,10 @@ def plot_loss_curve(history):
 
 
 def plot_loss_vs_learning(history):
-    """Find the ideal learning rate: where the loss istill decreasing, but not flatten out"""
+    """
+      Find the ideal learning rate: where the loss istill decreasing, but not flatten out
+      Model must have a callback function to use this method
+    """
     lrs = 1e-4 * (10 ** (np.arange(100)/20))
     plt.figure(figsize=(10, 7))
     # we want the x-axis (learning rate) to be log scale
@@ -235,9 +254,73 @@ def Introduction():
     # Create a confusion matrix
     pretty_confusion_matrix(y_test, prediction_binary)
 
-    # Check out the predictions our model is making
-    # plot_decision_boundary(model, x_test, y_test)
-    # mlm.plot_decision_boundary(model, x_test, y_test)
+
+def multiclass_items():
+    # Data has already been sorted into training and testing
+    (train_data, train_labels), (test_data,
+                                 test_labels) = fashion_mnist.load_data()
+
+    # Check the shape of the data
+    print(train_data[0].shape)
+    print(train_labels[0].shape)
+
+    # Transform labels in human readable
+    names = ["T-shirt/top", "Trouser", "Pullover",
+             "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"]
+
+    # Plot multiple random images
+    plt.figure(figsize=(7, 7))
+    for i in range(4):
+        plt.subplot(2, 2, i+1)
+        rand_index = random.choice(range(len(train_data)))
+        plt.imshow(train_data[rand_index], cmap=plt.cm.binary)
+        plt.title(names[train_labels[rand_index]])
+        plt.axis(False)
+        # plt.show()
+
+    # Set random seed
+    tf.random.set_seed(42)
+
+    # Create the model (use softmax on the output layer)
+    model = tf.keras.Sequential([
+        tf.keras.layers.Flatten(input_shape=(28, 28)),
+        tf.keras.layers.Dense(4, activation="relu"),
+        tf.keras.layers.Dense(4, activation="relu"),
+        tf.keras.layers.Dense(10, activation="softmax")
+    ])
+
+    # Compile the model
+    model.compile(loss=tf.keras.losses.CategoricalCrossentropy(),
+                  optimizer=tf.keras.optimizers.Adam(),
+                  metrics=["accuracy"])
+
+    # Create the learning rate callback
+    lr_scheduler = tf.keras.callbacks.LearningRateScheduler(
+        lambda epoch: 1e-3 * 10**(epoch/20))
+    # Check the min and max values of the trainig data
+    print(train_data.min())
+    print(train_data.max())
+
+    # Neural network prefer data to be normalized (between 0 and 1)
+    train_data_norm = train_data/255
+    test_data_norm = test_data/255
+    print(train_data_norm.min())
+    print(train_data_norm.max())
+
+    # Fit the model (normalized and non normalized data)
+    # non_norm_history = model.fit(train_data, tf.one_hot(
+    #     train_labels, depth=10), epochs=10, validation_data=(test_data, tf.one_hot(test_labels, depth=10)))
+
+    norm_history = model.fit(train_data_norm, tf.one_hot(
+        train_labels, depth=10), epochs=10, validation_data=(test_data_norm, tf.one_hot(test_labels, depth=10)), callbacks=[lr_scheduler])
+
+    # Plot loss curve to compare the models
+    # plot_loss_curve(non_norm_history)
+    # plot_loss_curve(norm_history)
+
+    # Check the ideal learning rate
+    # plot_loss_vs_learning(norm_history)
 
 
-Introduction()
+if __name__ == "__main__":
+    multiclass_items()

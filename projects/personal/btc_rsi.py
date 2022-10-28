@@ -140,7 +140,7 @@ def PredictBinary():
     data.loc[data['Delta'] < 0, 'Result'] = 0
 
     # Defining X and Y
-    X = data[['RSI', 'MACD', 'exp8']]
+    X = data[['RSI', ]]
     Y = data['Result']
 
     # Check if output has only 0 and 1
@@ -166,7 +166,7 @@ def PredictBinary():
 
     # Compile the model
     model.compile(loss=tf.keras.losses.BinaryCrossentropy(),
-                  optimizer=tf.keras.optimizers.Adam(lr=0.00001),
+                  optimizer=tf.keras.optimizers.Adam(),
                   metrics=["accuracy"])
 
     # Fit the model
