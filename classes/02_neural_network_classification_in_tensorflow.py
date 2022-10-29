@@ -178,12 +178,12 @@ def plot_loss_curve(history):
     plt.show()
 
 
-def plot_loss_vs_learning(history):
+def plot_loss_vs_learning(history, epochs):
     """
       Find the ideal learning rate: where the loss istill decreasing, but not flatten out
       Model must have a callback function to use this method
     """
-    lrs = 1e-4 * (10 ** (np.arange(100)/20))
+    lrs = 1e-3 * (10 ** (np.arange(epochs)/(epochs*2)))
     plt.figure(figsize=(10, 7))
     # we want the x-axis (learning rate) to be log scale
     plt.semilogx(lrs, history.history["loss"])
@@ -312,14 +312,22 @@ def multiclass_items():
     #     train_labels, depth=10), epochs=10, validation_data=(test_data, tf.one_hot(test_labels, depth=10)))
 
     norm_history = model.fit(train_data_norm, tf.one_hot(
-        train_labels, depth=10), epochs=10, validation_data=(test_data_norm, tf.one_hot(test_labels, depth=10)), callbacks=[lr_scheduler])
+        train_labels, depth=10), epochs=2, validation_data=(test_data_norm, tf.one_hot(test_labels, depth=10)), callbacks=[lr_scheduler])
 
     # Plot loss curve to compare the models
     # plot_loss_curve(non_norm_history)
     # plot_loss_curve(norm_history)
 
     # Check the ideal learning rate
-    # plot_loss_vs_learning(norm_history)
+    # plot_loss_vs_learning(norm_history, 2)
+
+    # Make predictions
+    y_probs = model.predict(test_data_norm)
+    # Get the biggest number in the array and convert into readeble format
+    print(names[tf.argmax(y_probs[0])])
+    # Convert all predictions probabilities into readeble format
+    y_preds = y_probs.argmax(axis=1)
+    print(y_preds)
 
 
 if __name__ == "__main__":
