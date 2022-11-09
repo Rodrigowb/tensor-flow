@@ -75,6 +75,7 @@ from sklearn.model_selection import train_test_split
 import itertools
 from tensorflow.keras.datasets import fashion_mnist
 import random
+from tensorflow.keras.utils import plot_model
 
 # Create a visualization function
 
@@ -117,8 +118,8 @@ def plot_decision_boundary(model, X, Y):
     plt.show()
 
 
-def pretty_confusion_matrix(y_test, y_pred):
-    figsize = (10, 10)
+def pretty_confusion_matrix(y_test, y_pred, classes=None, figsize=(15, 15), text_size=10):
+    figsize = figsize
 
     # Create the confusion matrix
     cm = confusion_matrix(y_test, y_pred)
@@ -132,9 +133,6 @@ def pretty_confusion_matrix(y_test, y_pred):
     # https://matplotlib.org/3.2.0/api/_as_gen/matplotlib.axes.Axes.matshow.html
     cax = ax.matshow(cm, cmap=plt.cm.Blues)
     fig.colorbar(cax)
-
-    # Create classes
-    classes = False
 
     if classes:
         labels = classes
@@ -155,9 +153,9 @@ def pretty_confusion_matrix(y_test, y_pred):
     ax.xaxis.tick_bottom()
 
     # Adjust label size
-    ax.xaxis.label.set_size(20)
-    ax.yaxis.label.set_size(20)
-    ax.title.set_size(20)
+    ax.xaxis.label.set_size(text_size)
+    ax.yaxis.label.set_size(text_size)
+    ax.title.set_size(text_size)
 
     # Set threshold for different colors
     threshold = (cm.max() + cm.min()) / 2.
@@ -167,7 +165,7 @@ def pretty_confusion_matrix(y_test, y_pred):
         plt.text(j, i, f"{cm[i, j]} ({cm_norm[i, j]*100:.1f}%)",
                  horizontalalignment="center",
                  color="white" if cm[i, j] > threshold else "black",
-                 size=15)
+                 size=text_size)
     #  Plot the graph
     plt.show()
 
@@ -328,6 +326,13 @@ def multiclass_items():
     # Convert all predictions probabilities into readeble format
     y_preds = y_probs.argmax(axis=1)
     print(y_preds)
+
+    # Print confusion matrix to evaluate the predictions
+    pretty_confusion_matrix(test_labels, y_preds,
+                            classes=names)
+
+    # See the inputs and outputs of each layer
+    plot_model(model, show_shapes=True)
 
 
 if __name__ == "__main__":
