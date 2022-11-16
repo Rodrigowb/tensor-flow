@@ -10,6 +10,20 @@ Introduction to Convolution Neural Networks and Compuer Vision with Tensorflow
 
 -----Batches-----
 Control memory in the computer.
+
+-----Basic architecture-----
+1. Convolutional layer (+ Relu activation)
+2. Pooling layer
+...
+
+-----Layers-----
+1. In the first layers, we might need to tell the model the input shape
+
+-----Hyperparameters-----
+1. Filters: higher values lead to more complex models
+2. Kerne size (filter size): determines the shape of the filters (lower values learns smaller features)
+3. Padding: pads the target tensor with zeroes os leaves as it is (same or valid)
+4. Strides: the numbers of steps (pixels) a filter takes across an image at a time (1 or 2)
 """
 
 from multiprocessing import pool
@@ -21,6 +35,7 @@ import matplotlib.image as mpimg
 import random
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import pandas as pd
 
 
 def directory_details(dir_path):
@@ -28,6 +43,35 @@ def directory_details(dir_path):
     for dirpath, dirnames, filenames in os.walk(dir_path):
         print(
             f'There are {len(dirnames)} directories and {len(filenames)} files in {dirpath}')
+
+
+def plot_loss_curve(history):
+    """Return separate loss curves for training and validation metrics."""
+
+    # Get the history metrics
+    loss = history.history["loss"]
+    val_loss = history.history["val_loss"]
+    accuracy = history.history["accuracy"]
+    val_accuracy = history.history["val_accuracy"]
+    epochs = range(len(history.history["loss"]))
+
+    # Plot loss
+    plt.plot(epochs, loss, label="training_loss")
+    plt.plot(epochs, val_loss, label="val_loss")
+    plt.title("loss")
+    plt.xlabel("epochs")
+    plt.legend()
+
+    # Plot accuracy
+    plt.figure()
+    plt.plot(epochs, accuracy, label="training_accuracy")
+    plt.plot(epochs, val_accuracy, label="val_accuracy")
+    plt.title("accuracy")
+    plt.xlabel("epochs")
+    plt.legend()
+
+    # Plot graphs
+    plt.show()
 
 
 def view_random_image(target_folder):
@@ -46,7 +90,7 @@ def first_cnn():
     # Set random seed
     tf.random.set_seed(42)
 
-    # Preprocess data
+    # Preprocess data (divide all pixel values to 255 for normalization)
     train_datagen = ImageDataGenerator(rescale=1./255)
     test_datagen = ImageDataGenerator(rescale=1./255)
 
@@ -63,8 +107,12 @@ def first_cnn():
 
     # Build a CNN model
     model = tf.keras.Sequential([
-        tf.keras.layers.Conv2D(filters=10, kernel_size=3,
-                               activation="relu", input_shape=(224, 224, 3)),
+        tf.keras.layers.Conv2D(filters=10,
+                               kernel_size=(3, 3),
+                               strides=(1, 1),
+                               padding="valid",
+                               activation="relu",
+                               input_shape=(224, 224, 3)),
         tf.keras.layers.Conv2D(10, 3, activation="relu"),
         tf.keras.layers.MaxPool2D(pool_size=2, padding="valid"),
         tf.keras.layers.Conv2D(10, 3, activation="relu"),
@@ -82,6 +130,9 @@ def first_cnn():
     # Fit the CNN model
     history = model.fit(train_data, epochs=5, steps_per_epoch=len(
         train_data), validation_data=valid_data, validation_steps=len(valid_data))
+
+    # Plot loss curve
+    plot_loss_curve(history=history)
 
 
 if __name__ == "__main__":
