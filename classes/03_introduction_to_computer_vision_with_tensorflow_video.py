@@ -24,6 +24,28 @@ Control memory in the computer.
 2. Kerne size (filter size): determines the shape of the filters (lower values learns smaller features)
 3. Padding: pads the target tensor with zeroes os leaves as it is (same or valid)
 4. Strides: the numbers of steps (pixels) a filter takes across an image at a time (1 or 2)
+
+-----Adjust the model parameters-----
+1. Create a baseline
+2. Beat the baseline
+3. Reduce overfitting
+
+-----Ways to induce overfitting-----
+1. Increase the numbers of conv layers
+2. Increase the numbers of conv filters
+3. Add another dense layer to the output of our flatten layer
+
+-----Ways to reduce overfitting-----
+1. Add data augmentation
+2. Add regularization layers (such as MaxPool2D)
+3. Add more data 
+
+-----Max Pooling Layers-----
+Condense the outputs of the Conv2D layers, by keeping only the most important, so the model can learn better
+
+-----Data augmentation-----
+Processing of altering our training data, leading to more diversity and making the model learn better.
+Adjust the rotation, flipping it, cropping it...
 """
 
 from multiprocessing import pool
@@ -94,6 +116,16 @@ def first_cnn():
     train_datagen = ImageDataGenerator(rescale=1./255)
     test_datagen = ImageDataGenerator(rescale=1./255)
 
+    # Data augmentation
+    train_datagen_augmented = ImageDataGenerator(
+        rescale=1./255,
+        rotation_range=0.2,
+        shear_range=0.2,
+        zoom_range=0.2,
+        width_shift_range=0.2,
+        height_shift_range=0.3,
+        horizontal_flip=True)
+
     # Set up paths for the directories
     train_dir = "../services/images/pizza_steak/train"
     test_dir = "../services/images/pizza_steak/test"
@@ -105,6 +137,10 @@ def first_cnn():
     valid_data = test_datagen.flow_from_directory(
         directory=test_dir, batch_size=32, target_size=(224, 224), class_mode="binary", seed=42)
 
+    # Data augmentation
+    train_data_augmented = train_datagen_augmented.flow_from_directory(
+        directory=train_dir, batch_size=32, target_size=(224, 224), class_mode="binary", seed=42)
+
     # Build a CNN model
     model = tf.keras.Sequential([
         tf.keras.layers.Conv2D(filters=10,
@@ -113,11 +149,10 @@ def first_cnn():
                                padding="valid",
                                activation="relu",
                                input_shape=(224, 224, 3)),
+        tf.keras.layers.MaxPool2D(pool_size=2),
         tf.keras.layers.Conv2D(10, 3, activation="relu"),
-        tf.keras.layers.MaxPool2D(pool_size=2, padding="valid"),
+        tf.keras.layers.MaxPool2D(),
         tf.keras.layers.Conv2D(10, 3, activation="relu"),
-        tf.keras.layers.Conv2D(10, 3, activation="relu"),
-        tf.keras.layers.MaxPool2D(2),
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(1, activation="sigmoid")
     ])
@@ -128,8 +163,8 @@ def first_cnn():
                   metrics=["accuracy"])
 
     # Fit the CNN model
-    history = model.fit(train_data, epochs=5, steps_per_epoch=len(
-        train_data), validation_data=valid_data, validation_steps=len(valid_data))
+    history = model.fit(train_data_augmented, epochs=5, steps_per_epoch=len(
+        train_data_augmented), validation_data=valid_data, validation_steps=len(valid_data))
 
     # Plot loss curve
     plot_loss_curve(history=history)
