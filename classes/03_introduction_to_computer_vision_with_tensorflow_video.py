@@ -46,8 +46,17 @@ Condense the outputs of the Conv2D layers, by keeping only the most important, s
 -----Data augmentation-----
 Processing of altering our training data, leading to more diversity and making the model learn better.
 Adjust the rotation, flipping it, cropping it...
+
+-----Improvements after baseline-----
+1. Increase the number of model layers
+2. Increase the number of filters in each convolutional layer (from 10 to 32, even 64)
+3. Train for longer
+4. Find an ideal learning rate
+5. Get more data
+6. Use transfer learning to leverage what another image model has learn and adjust to our user case
 """
 
+from services import MachineLearningMetrics as metrics
 from multiprocessing import pool
 import os
 from pickletools import optimize
@@ -58,6 +67,8 @@ import random
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import pandas as pd
+import sys
+sys.path.insert(0, '..')
 
 
 def directory_details(dir_path):
@@ -168,6 +179,9 @@ def first_cnn():
 
     # Plot loss curve
     plot_loss_curve(history=history)
+
+    # Find the ideal leraning rate
+    metrics.plot_loss_vs_learning(history=history)
 
 
 if __name__ == "__main__":
