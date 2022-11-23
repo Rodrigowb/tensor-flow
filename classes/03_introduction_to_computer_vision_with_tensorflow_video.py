@@ -39,6 +39,8 @@ Control memory in the computer.
 1. Add data augmentation
 2. Add regularization layers (such as MaxPool2D)
 3. Add more data 
+4. Simplify the model (remove layers and decrese the number of hidden units ) 
+5. Use transfer learning
 
 -----Max Pooling Layers-----
 Condense the outputs of the Conv2D layers, by keeping only the most important, so the model can learn better
@@ -54,21 +56,33 @@ Adjust the rotation, flipping it, cropping it...
 4. Find an ideal learning rate
 5. Get more data
 6. Use transfer learning to leverage what another image model has learn and adjust to our user case
+
+-----Binary vs. multiclass-----
+1. Output layer:
+- Binary: Sigmoid
+- Multiclass: Softmax
+2. Loss function:
+- Binary: BinaryCrossEntropy()
+- Multiclass: CategoricalCrossentropy()
+
 """
 
-from services import MachineLearningMetrics as metrics
-from multiprocessing import pool
-import os
-from pickletools import optimize
-from unittest import result
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-import random
-import tensorflow as tf
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-import pandas as pd
+# from services import MachineLearningMetrics as metrics
 import sys
-sys.path.insert(0, '..')
+sys.path.insert(
+    0, '/Users/rodrigow/Desktop/Personal-projects/tensor-flow-course/services')
+import pandas as pd
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import tensorflow as tf
+import random
+import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
+from unittest import result
+from pickletools import optimize
+import os
+from multiprocessing import pool
+import sys
+from services import MachineLearningMetrics as metrics
 
 
 def directory_details(dir_path):
@@ -118,8 +132,43 @@ def view_random_image(target_folder):
     plt.show()
     return tf.constant(img)
 
+def load_and_pred_image(filename, img_shape=224):
+  """Reads an image from filename, turns it into a tensor and reshapes it to (img_shape, img_shape, colour_chanels)"""
+  # Read the image
+  img = tf.io.read_file(filename)
+  # Decode the readed file into a tensor
+  img = tf.image.decode_image(img)
+  # Resize the image
+  img = tf.image.resize(img, size=[img_shape, img_shape])
+  # Rescale the image (pixels betweeen 0 and 1)
+  img = img/255.
+  return img
 
-def first_cnn():
+def pred_and_plot(model, filename, class_names):
+  """Imports an image, makes a prediction and plo the image with the label as the title"""
+
+  # Import the target image and preprocess it
+  img = load_and_pred_image(filename)
+
+  # Make a prediction
+  pred = model.predict(tf.expand_dims(img, axis=0))
+
+  # Get the predicted classes
+  # Multiclass
+  if len(pred[0]) > 1:
+    pred_class = class_names[tf.argmax(pred[0])]
+  # Binary
+  else:
+    pred_class = class_names[int(tf.round(pred))]
+
+  # Plot the image
+  plt.imshow(img)
+  plt.title(f"Prediction: {pred_class}")
+  plt.axis(False)
+  plt.show()
+
+
+def first_cnn(run=True, load=False, save=False):
     # Set random seed
     tf.random.set_seed(42)
 
@@ -131,7 +180,7 @@ def first_cnn():
     train_datagen_augmented = ImageDataGenerator(
         rescale=1./255,
         rotation_range=0.2,
-        shear_range=0.2,
+        # shear_range=0.2,
         zoom_range=0.2,
         width_shift_range=0.2,
         height_shift_range=0.3,
@@ -152,39 +201,51 @@ def first_cnn():
     train_data_augmented = train_datagen_augmented.flow_from_directory(
         directory=train_dir, batch_size=32, target_size=(224, 224), class_mode="binary", seed=42)
 
-    # Build a CNN model
-    model = tf.keras.Sequential([
-        tf.keras.layers.Conv2D(filters=10,
-                               kernel_size=(3, 3),
-                               strides=(1, 1),
-                               padding="valid",
-                               activation="relu",
-                               input_shape=(224, 224, 3)),
-        tf.keras.layers.MaxPool2D(pool_size=2),
-        tf.keras.layers.Conv2D(10, 3, activation="relu"),
-        tf.keras.layers.MaxPool2D(),
-        tf.keras.layers.Conv2D(10, 3, activation="relu"),
-        tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(1, activation="sigmoid")
-    ])
+    # Run model
+    if run:
+      # Build a CNN model
+      model = tf.keras.Sequential([
+          tf.keras.layers.Conv2D(filters=10,
+                                kernel_size=(3, 3),
+                                strides=(1, 1),
+                                padding="valid",
+                                activation="relu",
+                                input_shape=(224, 224, 3)),
+          tf.keras.layers.MaxPool2D(pool_size=2),
+          tf.keras.layers.Conv2D(10, 3, activation="relu"),
+          tf.keras.layers.MaxPool2D(),
+          tf.keras.layers.Conv2D(10, 3, activation="relu"),
+          tf.keras.layers.Flatten(),
+          tf.keras.layers.Dense(1, activation="sigmoid")
+      ])
 
-    # Compile the CNN
-    model.compile(loss=tf.keras.losses.BinaryCrossentropy(),
-                  optimizer=tf.keras.optimizers.Adam(),
-                  metrics=["accuracy"])
+      # Compile the CNN
+      model.compile(loss=tf.keras.losses.BinaryCrossentropy(),
+                    optimizer=tf.keras.optimizers.Adam(),
+                    metrics=["accuracy"])
 
-    # Fit the CNN model
-    history = model.fit(train_data_augmented, epochs=5, steps_per_epoch=len(
-        train_data_augmented), validation_data=valid_data, validation_steps=len(valid_data))
+      # Fit the CNN model
+      history = model.fit(train_data_augmented, epochs=20, steps_per_epoch=len(
+          train_data_augmented), validation_data=valid_data, validation_steps=len(valid_data))
 
-    # Plot loss curve
-    plot_loss_curve(history=history)
+      # Plot loss curve (check if the model if overfitted)
+      plot_loss_curve(history=history)
 
-    # Find the ideal leraning rate
-    metrics.plot_loss_vs_learning(history=history)
+      # Make predictions
+      pred_and_plot(model, '../services/images/pizza_steak/pred/pizza-pred.jpeg', ['pizza', 'steak'])
 
+    # Save the model
+    if save:
+      # Saving and loading our model(can be lounched as an API)
+      model.save("saved_trained_binary_food_classification")
+
+    # Load the model
+    if load:
+      loaded_model = tf.keras.models.load_model("saved_trained_binary_food_classification")
+      loaded_model.evaluate(valid_data)
+    
 
 if __name__ == "__main__":
     # directory_details("../services/images/pizza_steak")
     # image = view_random_image("../services/images/pizza_steak/test/steak")
-    first_cnn()
+    first_cnn(run=False, load=True, save=False)
