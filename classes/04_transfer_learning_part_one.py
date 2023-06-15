@@ -6,9 +6,12 @@ Use pre build models to improve the performance of our models and adapt them int
 -----Callbacks-----
 
 Extra functionalities we can add to the models to be performed during or after training. Most popular:
-1. Tensorboard: Tracking experiments with
-2. ModelCheckpoint: Model checkpoint with callback
-3. EarlyStopping: Stopping a model from training (before it trains too long and overfits)
+1. Tensorboard: Tracking experiments.
+2. ModelCheckpoint: Model checkpoint with callback.
+3. EarlyStopping: Stopping a model from training (before it trains too long and overfits).
+
+-----TensorFlow Hub-----
+- Use pretreined models: https://tfhub.dev/
 
 """
 import tensorflow as tf

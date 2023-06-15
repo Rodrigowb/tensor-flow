@@ -248,4 +248,4 @@ def first_cnn(run=True, load=False, save=False):
 if __name__ == "__main__":
     # directory_details("../services/images/pizza_steak")
     # image = view_random_image("../services/images/pizza_steak/test/steak")
-    first_cnn(run=False, load=True, save=False)
+    first_cnn(run=True, load=True, save=False)

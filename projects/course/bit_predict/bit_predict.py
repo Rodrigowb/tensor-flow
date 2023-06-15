@@ -149,14 +149,55 @@ class BitPredict():
                                                   verbose=0,
                                                   save_best_only=True)
 
-    def main(self):
-        self._naive_forecast_baseline(visualize=False)
+    def _model_one_dense(self):
+        tf.random.set_seed(42)
+
+        # Create the model
+        model = tf.keras.Sequential([
+            layers.Dense(128, activation="relu"),
+            layers.Dense(self.horizon, activation='linear')
+        ], name="model_one_dense")
+
+        # Compile the model
+        model.compile(loss="mae",
+                      optimizer=tf.keras.optimizers.Adam(),
+                      metrics=["mae"])
+
+        # Split matching pairs of windows and label
         full_windows, full_labels = self._make_windows(self.prices)
-        # Split matching pairs of windows and labels
         train_windows, test_windows, train_labels, test_labels = self._make_train_test_splits(
             full_windows, full_labels)
+
         print(
             f'{len(train_windows)} {len(test_windows)} {len(train_labels)} {len(test_labels)}')
+
+        print(train_windows[:5], train_labels[:5])
+        print(train_windows, train_labels)
+
+        # Fit the model
+        # model.fit(x=train_windows,
+        #           y=train_labels,
+        #           epochs=10,
+        #           verbose=1,
+        #           batch_size=128,
+        #           validation_data=(test_windows, test_labels),
+        #           callbacks=[self._create_model_checkpoint(
+        #               model_name=model.name)])
+
+        # # Evaluate the model
+        # model.evaluate(test_windows, test_windows)
+
+    def main(self):
+        # Baseline naive model (y = y - 1)
+        self._naive_forecast_baseline(visualize=False)
+        # Model 1: sequential
+        self._model_one_dense()
+        # full_windows, full_labels = self._make_windows(self.prices)
+        # # Split matching pairs of windows and labels
+        # train_windows, test_windows, train_labels, test_labels = self._make_train_test_splits(
+        #     full_windows, full_labels)
+        # print(
+        #     f'{len(train_windows)} {len(test_windows)} {len(train_labels)} {len(test_labels)}')
 
 
 if __name__ == "__main__":

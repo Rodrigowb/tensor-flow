@@ -18,7 +18,7 @@ Sometimes we must have changeable and unchangeable tensors
 tf.constant(): unchangeable tensor
 tf.Variable(): changeable tensor
 """
-import tensorflow_probability as tfp
+# import tensorflow_probability as tfp
 from statistics import multimode
 import numpy as np
 from random import seed
@@ -103,7 +103,7 @@ print(zero_tensor)
 
 # ---------------Turn numpy arrays into tensors---------------
 # The main difference between np arrays and tf tensors is that tensors can be run on a GPU much faster
-# Create a numoy array between 1 and 25
+# Create a numpy array between 1 and 25
 numpy_A = np.arange(1, 25, dtype=np.int32)
 print(numpy_A)
 # Turn into a tensor
@@ -231,8 +231,8 @@ print(F_mean)
 F_sum = tf.reduce_sum(F)
 print(F_sum)
 # 5- Variance
-F_variance = tfp.stats.variance(F)
-print(F_variance)
+# F_variance = tfp.stats.variance(F)
+# print(F_variance)
 # 6- Std
 F_std = tf.math.reduce_std(tf.cast(E, dtype=tf.float32))
 print(F_std)

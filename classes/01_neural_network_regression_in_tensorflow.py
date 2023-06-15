@@ -88,6 +88,10 @@ def FirstModel():
 
     # 1. Create a model using the Sequential API
     model = tf.keras.Sequential([
+        tf.keras.layers.Dense(25, activation="relu"),
+        tf.keras.layers.Dense(10, activation="relu"),
+        # tf.keras.layers.Dense(50, activation="relu"),
+        # tf.keras.layers.Dense(25, activation="relu"),
         tf.keras.layers.Dense(1)
     ])
 
@@ -134,11 +138,11 @@ def SecondModel():
 
     # 2- Compiling the model
     model.compile(loss=tf.keras.losses.mae,
-                  optimizer=tf.keras.optimizers.Adam(lr=0.01),
+                  optimizer=tf.keras.optimizers.Adam(lr=0.001),
                   metrics=["mae"])
 
     # 3- Fit the model
-    model.fit(tf.expand_dims(X, axis=-1), Y, epochs=100)
+    model.fit(tf.expand_dims(X, axis=-1), Y, epochs=1000)
 
     # 4- Try to predict using the builded model
     prediction = model.predict([17.0])
@@ -146,11 +150,9 @@ def SecondModel():
 
     # !!!Producing overfitting: the metrics in the training data is not the key parameters to evaluate a model!!!
 
-
-# SecondModel()
-# FirstModel()
-
 # ---------------Creating a plotting function---------------
+
+
 def plot_predictions(train_data,
                      train_labels,
                      test_data,
@@ -171,10 +173,8 @@ def ThirdModel():
     tf.random.set_seed(42)
     # Making a bigger dataset
     X = tf.range(-100, 100, 4)
-    print(X)
     # Make labels for the dataset
     Y = X + 10
-    print(Y)
 
     # 1- Visualize the data
     plt.plot(X, Y)
@@ -211,7 +211,7 @@ def ThirdModel():
 
     # 5.2- Compile the model
     model.compile(loss=tf.keras.losses.mae,
-                  optimizer=tf.keras.optimizers.Adam(lr=0.01),
+                  optimizer=tf.keras.optimizers.Adam(lr=0.001),
                   metrics=["mae"])
 
     # 5.3- Fit the model
@@ -242,7 +242,7 @@ def ThirdModel():
     print(mse)
 
     # 8- Saving the model using SavedModel format
-    model.save("first_model_saved.h5")
+    # model.save("first_model_saved.h5")
 
     # 9- Return the predictions
     return Y_pred, X_test
@@ -275,3 +275,7 @@ def CheckModel():
     # Predictions of the saved model
     Y_pred_saved = loaded_SavedModel_Format.predict(X_test)
     print(Y_pred == Y_pred_saved)
+
+
+if __name__ == "__main__":
+    ThirdModel()
